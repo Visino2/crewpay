@@ -2,6 +2,12 @@
 
 Cross-border contractor payment management platform (Blaaiz Buildathon).
 
+**Live demo: [crewpay-omega.vercel.app](https://crewpay-omega.vercel.app)**
+
+> Pay runs, approvals and payment history are live. Payouts through Blaaiz
+> are **not connected yet**: approving a pay run records a decision and moves
+> no money.
+
 Next.js (App Router) · TypeScript (strict) · Tailwind CSS v4 · shadcn/ui · npm
 
 ## Getting started
@@ -63,7 +69,7 @@ shown as unavailable rather than estimated.
 Use a **dedicated** Supabase project containing fictional data only.
 
 1. **Database:** `supabase link --project-ref <ref>`, then `supabase db push`
-   to apply all four migrations in `supabase/migrations`. Confirm with
+   to apply all six migrations in `supabase/migrations`. Confirm with
    `supabase migration list`. Set auth settings in the dashboard, not with
    `supabase config push`: `config.toml` holds local-only values such as a
    localhost site URL.
@@ -76,12 +82,17 @@ Use a **dedicated** Supabase project containing fictional data only.
    - Supabase's built-in email only reaches project team members (2 per hour),
      so public sign-up needs custom SMTP. Do not disable confirmations:
      invitations rely on confirmed emails.
-3. **Vercel environment variables** (all public by design):
+   - On the Free plan Supabase rejects template changes until custom SMTP is
+     configured. Until then `/auth/confirm` also accepts the default
+     template's `?code=` links (the email is confirmed by Supabase first).
+3. **Region:** `vercel.json` runs functions in `lhr1` (London), next to a
+   Supabase project in `eu-west-2`. Change both together.
+4. **Vercel environment variables** (all public by design):
    `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_SUPABASE_URL` and
    `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. Do **not** set `SUPABASE_SECRET_KEY`
    or any `BLAAIZ_*` variable on Vercel. No request path needs them, and
    without Blaaiz variables the app shows payouts as not connected.
-4. **Demo accounts:** from your own machine, run
+5. **Demo accounts:** from your own machine, run
    `npm run demo:seed -- --hosted-demo` with `CREWPAY_SEED_SUPABASE_URL`,
    `CREWPAY_SEED_PUBLISHABLE_KEY` and `CREWPAY_SEED_SECRET_KEY` set in your
    shell only. Share the preparer, approver and viewer accounts. Keep the
